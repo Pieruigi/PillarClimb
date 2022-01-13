@@ -6,6 +6,8 @@ namespace Zomp.Controllers
 {
     public class LevelController : MonoBehaviour
     {
+        public const float PillarHorizontalDisplacement = 4f;
+
         #region private fields
         [SerializeField]
         GameObject pillarPrefab;
@@ -18,6 +20,7 @@ namespace Zomp.Controllers
         float fixedPillarTime = 12f; // One fixed pillar every tot meters
         System.DateTime lastFixedPillarTime;
         float scrollSpeed = 1f;
+  
         #endregion
 
         #region private methods
@@ -30,7 +33,7 @@ namespace Zomp.Controllers
         void Start()
         {
             // Create the starting pillar
-            CreateNewPillar(Pillar.MaxBricksPerPillar, true);
+            CreateNewPillar(Pillar.MaxBricksPerPillar, true, true);
             Pillar lastPillar = pillars[pillars.Count - 1];
             System.DateTime fakeDateTime = System.DateTime.UtcNow.AddSeconds(lastPillar.MaxLength / scrollSpeed);
             lastFixedPillarTime = fakeDateTime;
@@ -41,13 +44,13 @@ namespace Zomp.Controllers
                 if((fakeDateTime - lastFixedPillarTime).TotalSeconds > fixedPillarTime)
                 {
                     
-                    CreateNewPillar(Random.Range(3, Pillar.MaxBricksPerPillar + 1), true);
+                    CreateNewPillar(Random.Range(3, Pillar.MaxBricksPerPillar + 1), true, true);
                     lastFixedPillarTime = fakeDateTime;
                     
                 }
                 else
                 {
-                    CreateNewPillar(Random.Range(2, Pillar.MaxBricksPerPillar + 1), false);
+                    CreateNewPillar(Random.Range(2, Pillar.MaxBricksPerPillar + 1), false, true);
 
                 }
                 lastPillar = pillars[pillars.Count - 1];
@@ -68,7 +71,7 @@ namespace Zomp.Controllers
 
         }
 
-        void CreateNewPillar(int maxBricks, bool isFixed)
+        void CreateNewPillar(int maxBricks, bool isFixed, bool toLeft)
         {
             // Get the last pillar to compute distance
             float lastY = 0;
@@ -81,7 +84,7 @@ namespace Zomp.Controllers
             pillar.MaxBricks = maxBricks;
 
             // Set in position
-            pillar.transform.position = Vector3.zero;
+            pillar.transform.position = (toLeft ? Vector3.left : Vector3.right) * PillarHorizontalDisplacement;
             pillar.transform.Translate(Vector3.up * ( lastY + pillar.MaxLength + Pillar.BrickLength/2f));
             // Add pillar to the list
             pillars.Add(pillar);
