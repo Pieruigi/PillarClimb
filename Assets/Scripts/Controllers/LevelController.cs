@@ -13,34 +13,59 @@ namespace Zomp.Controllers
         int currentPillarId; // The id of the pillar the player is currently running
 
         List<Pillar> pillars = new List<Pillar>();
-        int maxBricks = 5;
+       
         #endregion
 
         #region private methods
         private void Awake()
         {
-            // Create the starting pillar
-            Pillar pillar = GameObject.Instantiate(pillarPrefab).GetComponent<Pillar>();
-            pillar.IsFixed = true;
-            pillar.MaxBricks = maxBricks;
-            // Move the pillar up
-            pillar.transform.position = Vector3.zero;
-            pillar.transform.Translate(Vector3.up * pillar.MaxLength);
-            pillars.Add(pillar);
+            
         }
 
         // Start is called before the first frame update
         void Start()
         {
-            // Create the first pillar
-            for(int i=0; i<maxBricks; i++)
-                pillars[0].AddNewBrick();
+            // Create the starting pillar
+            CreateNewPillar(Pillar.MaxBricksPerPillar, true);
         }
 
         // Update is called once per frame
         void Update()
         {
 
+        }
+
+        void Init()
+        {
+
+        }
+
+        void CreateNewPillar(int maxBricks, bool isFixed)
+        {
+            // Get the last pillar to compute distance
+            float lastY = 0;
+            if (pillars.Count > 0)
+                lastY = pillars[pillars.Count - 1].transform.position.y;
+
+            // Create the new pillar
+            Pillar pillar = GameObject.Instantiate(pillarPrefab).GetComponent<Pillar>();
+            pillar.IsFixed = isFixed;
+            pillar.MaxBricks = maxBricks;
+            // Set in position
+            pillar.transform.position = Vector3.zero;
+            pillar.transform.Translate(Vector3.up * ( lastY + pillar.MaxLength));
+            pillars.Add(pillar);
+
+            // If the pillar is fixed we show all the brick, otherwise we show only the first one.
+            if (isFixed)
+            {
+                for (int i = 0; i < maxBricks; i++)
+                    pillar.AddNewBrick();
+            }
+            else
+            {
+                pillar.AddNewBrick();
+            }
         }
         #endregion
     }

@@ -7,6 +7,9 @@ namespace Zomp
     public class Pillar : MonoBehaviour
     {
         #region properties
+        public const float BrickLength = 1;
+        public const int MaxBricksPerPillar = 5;
+
         public bool IsFixed
         {
             get { return isFixed; }
@@ -21,7 +24,7 @@ namespace Zomp
 
         public float MaxLength
         {
-            get { return maxBricks * brickLength; }
+            get { return maxBricks * BrickLength; }
         }
         #endregion
 
@@ -43,7 +46,7 @@ namespace Zomp
         List<GameObject> bricks = new List<GameObject>();
 
         int maxBricks; // The maximum number of bricks this pillar can be made of
-        float brickLength = 1;
+        //float brickLength = 1;
         
         #endregion
 
@@ -105,7 +108,7 @@ namespace Zomp
             // Create the new brick
             GameObject brick = GameObject.Instantiate(prefab, transform);
             // Set position 
-            brick.transform.localPosition = Vector3.down * bricks.Count * brickLength;
+            brick.transform.localPosition = Vector3.down * bricks.Count * BrickLength;
             // Add to the list
             bricks.Add(brick);
         }
