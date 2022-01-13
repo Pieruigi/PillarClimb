@@ -13,7 +13,11 @@ namespace Zomp.Controllers
         int currentPillarId; // The id of the pillar the player is currently running
 
         List<Pillar> pillars = new List<Pillar>();
-       
+        int minPillars = 10;
+
+        float fixedPillarTime = 12f; // One fixed pillar every tot meters
+        System.DateTime lastFixedPillarTime;
+        float scrollSpeed = 1f;
         #endregion
 
         #region private methods
@@ -27,6 +31,30 @@ namespace Zomp.Controllers
         {
             // Create the starting pillar
             CreateNewPillar(Pillar.MaxBricksPerPillar, true);
+            Pillar lastPillar = pillars[pillars.Count - 1];
+            System.DateTime fakeDateTime = System.DateTime.UtcNow.AddSeconds(lastPillar.MaxLength / scrollSpeed);
+            lastFixedPillarTime = fakeDateTime;
+
+            for (int i=0; i<minPillars; i++)
+            {
+                // Check if we must add a fixed pillar
+                if((fakeDateTime - lastFixedPillarTime).TotalSeconds > fixedPillarTime)
+                {
+                    
+                    CreateNewPillar(Random.Range(3, Pillar.MaxBricksPerPillar + 1), true);
+                    lastFixedPillarTime = fakeDateTime;
+                    
+                }
+                else
+                {
+                    CreateNewPillar(Random.Range(2, Pillar.MaxBricksPerPillar + 1), false);
+
+                }
+                lastPillar = pillars[pillars.Count - 1];
+                fakeDateTime = fakeDateTime.AddSeconds((lastPillar.MaxLength + Pillar.BrickLength/2f) / scrollSpeed);
+            }
+                
+
         }
 
         // Update is called once per frame
@@ -51,9 +79,11 @@ namespace Zomp.Controllers
             Pillar pillar = GameObject.Instantiate(pillarPrefab).GetComponent<Pillar>();
             pillar.IsFixed = isFixed;
             pillar.MaxBricks = maxBricks;
+
             // Set in position
             pillar.transform.position = Vector3.zero;
-            pillar.transform.Translate(Vector3.up * ( lastY + pillar.MaxLength));
+            pillar.transform.Translate(Vector3.up * ( lastY + pillar.MaxLength + Pillar.BrickLength/2f));
+            // Add pillar to the list
             pillars.Add(pillar);
 
             // If the pillar is fixed we show all the brick, otherwise we show only the first one.
