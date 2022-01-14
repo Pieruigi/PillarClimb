@@ -107,7 +107,6 @@ GameObject:
   - component: {fileID: 3588869725058318104}
   - component: {fileID: 1650364748260122367}
   - component: {fileID: 8842687187374934497}
-  - component: {fileID: 8697394938130711271}
   m_Layer: 0
   m_Name: Mesh
   m_TagString: Untagged
@@ -180,19 +179,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &8697394938130711271
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1947725731831922173}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &8754603092264748625
 GameObject:
   m_ObjectHideFlags: 0
@@ -202,9 +188,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6032313432550769844}
+  - component: {fileID: 3974382722214818034}
   m_Layer: 0
   m_Name: BottomBrick
-  m_TagString: Untagged
+  m_TagString: Pillar
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -224,3 +211,16 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &3974382722214818034
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8754603092264748625}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: -0.5, z: 0}

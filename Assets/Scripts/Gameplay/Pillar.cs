@@ -26,6 +26,8 @@ namespace Zomp
         {
             get { return maxBricks * BrickLength; }
         }
+
+       
         #endregion
 
         #region private fields
@@ -113,7 +115,10 @@ namespace Zomp
             bricks.Add(brick);
         }
 
-
+        public bool IsCompleted()
+        {
+            return bricks.Count == maxBricks;
+        }
         #endregion
     }
 

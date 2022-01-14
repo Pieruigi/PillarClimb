@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 4058449941800852912}
   - component: {fileID: 2268685317171100759}
   - component: {fileID: 8298781290008554313}
-  - component: {fileID: 8155986101726634063}
   m_Layer: 0
   m_Name: Mesh
   m_TagString: Untagged
@@ -84,19 +83,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &8155986101726634063
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1340681273924198229}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &4092408514201867801
 GameObject:
   m_ObjectHideFlags: 0
@@ -188,9 +174,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7062824770704354845}
+  - component: {fileID: 1945960938115898706}
   m_Layer: 0
   m_Name: FixedTopBrick
-  m_TagString: Untagged
+  m_TagString: Pillar
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -210,3 +197,16 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &1945960938115898706
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5246057561732558072}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: -0.5, z: 0}

@@ -37,7 +37,8 @@ namespace Zomp.Controllers
             if (!Instance)
             {
                 Instance = this;
-                Init();
+                //Init();
+                CreateStartingPillar();
             }
             else
             {
@@ -60,7 +61,7 @@ namespace Zomp.Controllers
             if (paused)
                 return;
 
-            UpdatePillars();
+            //UpdatePillars();
         }
 
         void HandleOnPause(bool value)
@@ -97,9 +98,13 @@ namespace Zomp.Controllers
 
         }
 
-        
+        Pillar CreateStartingPillar()
+        {
+            Pillar ret = CreateNewPillar(5, true, true);
+            return ret;
+        }
 
-        void CreateNewPillar(int maxBricks, bool isFixed, bool toLeft)
+        Pillar CreateNewPillar(int maxBricks, bool isFixed, bool toLeft)
         {
             // Get the last pillar to compute distance
             float lastY = 0;
@@ -123,10 +128,12 @@ namespace Zomp.Controllers
                 for (int i = 0; i < maxBricks; i++)
                     pillar.AddNewBrick();
             }
-            else
-            {
-                pillar.AddNewBrick();
-            }
+            //else
+            //{
+            //    pillar.AddNewBrick();
+            //}
+
+            return pillar;
         }
         #endregion
 
@@ -152,6 +159,12 @@ namespace Zomp.Controllers
             }
             lastPillarUpdateTime = System.DateTime.UtcNow;
 
+        }
+
+        public Pillar GetNextPillarToBuild()
+        {
+            return CreateNewPillar(Random.Range(2, Pillar.MaxBricksPerPillar + 1), false, true);
+           
         }
         #endregion
     }

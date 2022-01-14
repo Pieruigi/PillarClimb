@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Zomp.Utility
+namespace Zomp
 {
     public class Constants
     {
