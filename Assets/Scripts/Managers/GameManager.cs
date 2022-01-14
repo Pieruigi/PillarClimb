@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 using Zomp.Controllers;
 
@@ -8,6 +9,10 @@ namespace Zomp.Managers
 {
     public class GameManager : MonoBehaviour
     {
+        #region actions
+        public UnityAction<bool> OnPause;
+        #endregion
+
         #region properties
         public static GameManager Instance { get; private set; }
         #endregion
@@ -24,6 +29,7 @@ namespace Zomp.Managers
             if (!Instance)
             {
                 Instance = this;
+                paused = GameManager.Instance.IsPaused();
                 SceneManager.sceneLoaded += HandleOnSceneLoaded;
 
                 DontDestroyOnLoad(gameObject);
@@ -71,8 +77,7 @@ namespace Zomp.Managers
         {
             paused = value;
 
-            // Set player controller
-            PlayerController.Instance?.SetPaused(value);
+            OnPause?.Invoke(value);
         }
 
         public bool IsPaused()

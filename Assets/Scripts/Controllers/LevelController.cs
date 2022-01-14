@@ -1,12 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Zomp.Managers;
 
 namespace Zomp.Controllers
 {
     public class LevelController : MonoBehaviour
     {
+        #region properties
+        public static LevelController Instance { get; private set; }
+
         public const float PillarHorizontalDisplacement = 4f;
+
+        #endregion
 
         #region private fields
         [SerializeField]
@@ -20,17 +26,49 @@ namespace Zomp.Controllers
         float fixedPillarTime = 12f; // One fixed pillar every tot meters
         System.DateTime lastFixedPillarTime;
         float scrollSpeed = 1f;
-  
+        bool paused = false;
+        System.DateTime lastPillarUpdateTime;
+        float pillarUpdateTime = 1.66666666f;
         #endregion
 
         #region private methods
         private void Awake()
         {
-            
+            if (!Instance)
+            {
+                Instance = this;
+                Init();
+            }
+            else
+            {
+                Destroy(gameObject);
+            }
+
         }
 
         // Start is called before the first frame update
         void Start()
+        {
+            paused = GameManager.Instance.IsPaused();
+            GameManager.Instance.OnPause += HandleOnPause;
+           
+        }
+
+        // Update is called once per frame
+        void Update()
+        {
+            if (paused)
+                return;
+
+            UpdatePillars();
+        }
+
+        void HandleOnPause(bool value)
+        {
+            paused = value;
+        }
+
+        void Init()
         {
             // Create the starting pillar
             CreateNewPillar(Pillar.MaxBricksPerPillar, true, true);
@@ -38,15 +76,15 @@ namespace Zomp.Controllers
             System.DateTime fakeDateTime = System.DateTime.UtcNow.AddSeconds(lastPillar.MaxLength / scrollSpeed);
             lastFixedPillarTime = fakeDateTime;
 
-            for (int i=0; i<minPillars; i++)
+            for (int i = 0; i < minPillars; i++)
             {
                 // Check if we must add a fixed pillar
-                if((fakeDateTime - lastFixedPillarTime).TotalSeconds > fixedPillarTime)
+                if ((fakeDateTime - lastFixedPillarTime).TotalSeconds > fixedPillarTime)
                 {
-                    
+
                     CreateNewPillar(Random.Range(3, Pillar.MaxBricksPerPillar + 1), true, true);
                     lastFixedPillarTime = fakeDateTime;
-                    
+
                 }
                 else
                 {
@@ -54,22 +92,12 @@ namespace Zomp.Controllers
 
                 }
                 lastPillar = pillars[pillars.Count - 1];
-                fakeDateTime = fakeDateTime.AddSeconds((lastPillar.MaxLength + Pillar.BrickLength/2f) / scrollSpeed);
+                fakeDateTime = fakeDateTime.AddSeconds((lastPillar.MaxLength + Pillar.BrickLength / 2f) / scrollSpeed);
             }
-                
 
         }
 
-        // Update is called once per frame
-        void Update()
-        {
-
-        }
-
-        void Init()
-        {
-
-        }
+        
 
         void CreateNewPillar(int maxBricks, bool isFixed, bool toLeft)
         {
@@ -99,6 +127,31 @@ namespace Zomp.Controllers
             {
                 pillar.AddNewBrick();
             }
+        }
+        #endregion
+
+        #region public methods
+        public void UpdatePillars()
+        {
+
+            // Destroy the older pillar
+            Pillar p = pillars[0];
+            pillars.Remove(p);
+
+            // Create a new pillar to the top
+            if ((System.DateTime.UtcNow - lastFixedPillarTime).TotalSeconds > fixedPillarTime)
+            {
+
+                CreateNewPillar(Random.Range(3, Pillar.MaxBricksPerPillar + 1), true, true);
+                lastFixedPillarTime = System.DateTime.UtcNow;
+
+            }
+            else
+            {
+                CreateNewPillar(Random.Range(2, Pillar.MaxBricksPerPillar + 1), false, true);
+            }
+            lastPillarUpdateTime = System.DateTime.UtcNow;
+
         }
         #endregion
     }

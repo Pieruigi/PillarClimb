@@ -27,6 +27,9 @@ namespace Zomp.Controllers
             if (!Instance)
             {
                 Instance = this;
+
+               
+
                 // Get rigid body
                 rb = GetComponent<Rigidbody>();
                 // Set starting position 
@@ -43,7 +46,9 @@ namespace Zomp.Controllers
         // Start is called before the first frame update
         void Start()
         {
-
+            paused = GameManager.Instance.IsPaused();
+            // Set handles
+            GameManager.Instance.OnPause += HandleOnPause;
         }
 
         // Update is called once per frame
@@ -65,9 +70,18 @@ namespace Zomp.Controllers
             rb.MovePosition(rb.position + Vector3.up * speed * Time.fixedDeltaTime);
             //transform.position += Vector3.forward * speed * Time.deltaTime;
         }
-        #endregion
-        #region public methods
-        public void SetPaused(bool value)
+
+        private void OnDestroy()
+        {
+            GameManager.Instance.OnPause -= HandleOnPause;
+        }
+
+        void HandleOnPause(bool paused)
+        {
+            SetPaused(paused);
+        }
+
+        void SetPaused(bool value)
         {
             paused = value;
             if (paused)
@@ -79,6 +93,9 @@ namespace Zomp.Controllers
                 speed = maxSpeed;
             }
         }
+        #endregion
+        #region public methods
+
         #endregion
     }
 
