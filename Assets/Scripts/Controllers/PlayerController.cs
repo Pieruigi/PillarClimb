@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Zomp.Managers;
-using Zomp.Utility;
+
 
 namespace Zomp.Controllers
 {
@@ -10,6 +10,7 @@ namespace Zomp.Controllers
     {
         #region properties
         public static PlayerController Instance { get; private set; }
+
         #endregion
 
         #region private fields
@@ -24,7 +25,7 @@ namespace Zomp.Controllers
         System.DateTime lastBuildingTime;
         float buildingTime = 0.6f;
         Pillar buildingPillar;
-        Pillar walkingPillar;
+        Pillar lastWalkingPillar;
         bool grounded = false;
         Collider coll;
         #endregion
@@ -56,7 +57,7 @@ namespace Zomp.Controllers
         // Start is called before the first frame update
         void Start()
         {
-            paused = GameManager.Instance.IsPaused();
+            SetPaused(GameManager.Instance.IsPaused());
             // Set handles
             GameManager.Instance.OnPause += HandleOnPause;
         }
@@ -96,8 +97,9 @@ namespace Zomp.Controllers
             if (Tags.Pillar.Equals(other.tag))
             {
                 grounded = true;
-                walkingPillar = other.GetComponent<Pillar>();
+                lastWalkingPillar = LevelController.Instance.GetPillar(other.gameObject);
                 Debug.Log("Grounded:" + grounded);
+                Debug.Log("LastWalkingPillar:" + lastWalkingPillar);
             }
 
         }
@@ -107,7 +109,7 @@ namespace Zomp.Controllers
             if (Tags.Pillar.Equals(other.tag))
             {
                 grounded = false;
-                walkingPillar = null;
+               
                 Debug.Log("Grounded:" + grounded);
             }
         }
@@ -130,9 +132,9 @@ namespace Zomp.Controllers
             {
                 // If we are building no pillar or the last pillar we were building is the one we
                 // are walking now then we need a new pillar to build
-                if(buildingPillar == null || buildingPillar == walkingPillar || buildingPillar.IsCompleted())
+                if(buildingPillar == null || buildingPillar == lastWalkingPillar || buildingPillar.IsCompleted())
                 {
-                    buildingPillar = LevelController.Instance.GetNextPillarToBuild();
+                    buildingPillar = LevelController.Instance.GetNextPillarToBuild(lastWalkingPillar);
                     Debug.Log("Pillar to build:" + buildingPillar);
                 }
 

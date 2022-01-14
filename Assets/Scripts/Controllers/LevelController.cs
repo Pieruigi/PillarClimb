@@ -17,18 +17,14 @@ namespace Zomp.Controllers
         #region private fields
         [SerializeField]
         GameObject pillarPrefab;
-
-        int currentPillarId; // The id of the pillar the player is currently running
+               
 
         List<Pillar> pillars = new List<Pillar>();
-        int minPillars = 10;
-
+        
         float fixedPillarTime = 12f; // One fixed pillar every tot meters
         System.DateTime lastFixedPillarTime;
-        float scrollSpeed = 1f;
         bool paused = false;
-        System.DateTime lastPillarUpdateTime;
-        float pillarUpdateTime = 1.66666666f;
+        int maxBuilding = 2;
         #endregion
 
         #region private methods
@@ -37,7 +33,7 @@ namespace Zomp.Controllers
             if (!Instance)
             {
                 Instance = this;
-                //Init();
+              
                 CreateStartingPillar();
             }
             else
@@ -61,7 +57,6 @@ namespace Zomp.Controllers
             if (paused)
                 return;
 
-            //UpdatePillars();
         }
 
         void HandleOnPause(bool value)
@@ -69,39 +64,11 @@ namespace Zomp.Controllers
             paused = value;
         }
 
-        void Init()
+       
+        void CreateStartingPillar()
         {
-            // Create the starting pillar
-            CreateNewPillar(Pillar.MaxBricksPerPillar, true, true);
-            Pillar lastPillar = pillars[pillars.Count - 1];
-            System.DateTime fakeDateTime = System.DateTime.UtcNow.AddSeconds(lastPillar.MaxLength / scrollSpeed);
-            lastFixedPillarTime = fakeDateTime;
-
-            for (int i = 0; i < minPillars; i++)
-            {
-                // Check if we must add a fixed pillar
-                if ((fakeDateTime - lastFixedPillarTime).TotalSeconds > fixedPillarTime)
-                {
-
-                    CreateNewPillar(Random.Range(3, Pillar.MaxBricksPerPillar + 1), true, true);
-                    lastFixedPillarTime = fakeDateTime;
-
-                }
-                else
-                {
-                    CreateNewPillar(Random.Range(2, Pillar.MaxBricksPerPillar + 1), false, true);
-
-                }
-                lastPillar = pillars[pillars.Count - 1];
-                fakeDateTime = fakeDateTime.AddSeconds((lastPillar.MaxLength + Pillar.BrickLength / 2f) / scrollSpeed);
-            }
-
-        }
-
-        Pillar CreateStartingPillar()
-        {
-            Pillar ret = CreateNewPillar(5, true, true);
-            return ret;
+            CreateNewPillar(5, true, true);
+            
         }
 
         Pillar CreateNewPillar(int maxBricks, bool isFixed, bool toLeft)
@@ -128,43 +95,46 @@ namespace Zomp.Controllers
                 for (int i = 0; i < maxBricks; i++)
                     pillar.AddNewBrick();
             }
-            //else
-            //{
-            //    pillar.AddNewBrick();
-            //}
+           
 
             return pillar;
         }
         #endregion
 
         #region public methods
-        public void UpdatePillars()
+     
+        /// <summary>
+        /// Get the next pillar to build by the player.
+        /// </summary>
+        /// <param name="lastWalkingPillar"></param>
+        /// <returns></returns>
+        public Pillar GetNextPillarToBuild(Pillar lastWalkingPillar)
         {
-
-            // Destroy the older pillar
-            Pillar p = pillars[0];
-            pillars.Remove(p);
-
-            // Create a new pillar to the top
-            if ((System.DateTime.UtcNow - lastFixedPillarTime).TotalSeconds > fixedPillarTime)
-            {
-
-                CreateNewPillar(Random.Range(3, Pillar.MaxBricksPerPillar + 1), true, true);
-                lastFixedPillarTime = System.DateTime.UtcNow;
-
-            }
-            else
-            {
-                CreateNewPillar(Random.Range(2, Pillar.MaxBricksPerPillar + 1), false, true);
-            }
-            lastPillarUpdateTime = System.DateTime.UtcNow;
-
-        }
-
-        public Pillar GetNextPillarToBuild()
-        {
+            int index = pillars.IndexOf(lastWalkingPillar);
+            if (pillars.Count - 1 - index > maxBuilding)
+                return null;
+            
             return CreateNewPillar(Random.Range(2, Pillar.MaxBricksPerPillar + 1), false, true);
            
+        }
+
+        /// <summary>
+        /// Get the pillar the brick passed as parameter belongs to.
+        /// </summary>
+        /// <param name="brick"></param>
+        /// <returns></returns>
+        public Pillar GetPillar(GameObject brick)
+        {
+            foreach(Pillar pillar in pillars)
+            {
+                for(int i=0; i<pillar.BrickCount; i++)
+                {
+                    if (brick == pillar.GetBrickAt(i))
+                        return pillar;
+                }
+            }
+
+            return null;
         }
         #endregion
     }

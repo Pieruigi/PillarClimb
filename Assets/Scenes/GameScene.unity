@@ -409,11 +409,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 4717131952712662806, guid: 5c59eb69fad1edd40949fbd80c3156bc,
-        type: 3}
-      propertyPath: m_IsTrigger
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 4717131953767535512, guid: 5c59eb69fad1edd40949fbd80c3156bc,
         type: 3}
       propertyPath: m_Name
@@ -474,25 +469,5 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 4717131952712662806, guid: 5c59eb69fad1edd40949fbd80c3156bc, type: 3}
+    m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5c59eb69fad1edd40949fbd80c3156bc, type: 3}
---- !u!1 &1192727604 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4717131953767535512, guid: 5c59eb69fad1edd40949fbd80c3156bc,
-    type: 3}
-  m_PrefabInstance: {fileID: 1192727603}
-  m_PrefabAsset: {fileID: 0}
---- !u!135 &1192727605
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1192727604}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.55
-  m_Center: {x: 0, y: 0, z: 0}

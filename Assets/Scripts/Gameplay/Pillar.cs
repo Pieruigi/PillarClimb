@@ -27,6 +27,10 @@ namespace Zomp
             get { return maxBricks * BrickLength; }
         }
 
+        public int BrickCount
+        {
+            get { return bricks.Count; }
+        }
        
         #endregion
 
@@ -48,8 +52,8 @@ namespace Zomp
         List<GameObject> bricks = new List<GameObject>();
 
         int maxBricks; // The maximum number of bricks this pillar can be made of
-        //float brickLength = 1;
-        
+        float lifeTime = 30;
+  
         #endregion
 
         #region private methods
@@ -62,7 +66,7 @@ namespace Zomp
         // Start is called before the first frame update
         void Start()
         {
-            
+            Destroy(gameObject, lifeTime);
         }
 
         // Update is called once per frame
@@ -118,6 +122,11 @@ namespace Zomp
         public bool IsCompleted()
         {
             return bricks.Count == maxBricks;
+        }
+
+        public GameObject GetBrickAt(int index)
+        {
+            return bricks[index];
         }
         #endregion
     }
